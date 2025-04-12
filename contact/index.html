@@ -1,39 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact - Eli Nalebuff</title>
-    <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8" />
+  <title>Contact - Eli Nalebuff</title>
+  <link rel="stylesheet" href="../style.css" />
 </head>
 <body>
-    <nav>
-        <a href="../index.html">Home</a>
-        <a href="../contact/index.html">Contact</a>
-        <a href="../cv/index.html">CV</a>
-        <a href="https://github.com/elinalebuff" target="_blank">GitHub</a>
-    </nav>
-    <h1>Contact</h1>
-    
-    <!-- Replace "elinalebuff@example.com" with your actual email address -->
-    <form action="mailto:elinalebuff@example.com" method="POST" enctype="text/plain">
-      <label>Email:
-        <!-- Replace the default value with your email if desired -->
-        <input type="email" name="email" value="your-email@example.com">
-      </label>
-      <br>
-      <label>Subject:
-        <!-- You can change the default subject text if needed -->
-        <input name="subject" value="Hello from my website">
-      </label>
-      <br>
-      <label>Message:
-        <!-- Replace the text with your default message or leave as is -->
-        <textarea name="body">Type your message here...</textarea>
-      </label>
-      <br>
-      <button>Send</button>
-    </form>
+  <nav>
+    <ul class="navbar">
+      <li><a href="../" class="nav-link">Home</a></li>
+      <li><a href="../projects/" class="nav-link">Projects</a></li>
+      <li><a href="../resume/" class="nav-link">Resume</a></li>
+      <li><a href="../contact/" class="nav-link current">Contact</a></li>
+      <li><a href="https://github.com/elinalebuff" class="nav-link" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
 
+  <main class="contact-container">
+    <h1 class="contact-heading">Contact Me</h1>
+    <form class="contact-form" action="mailto:youremail@example.com" method="POST" enctype="text/plain">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required />
+  
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" name="subject" placeholder="What's this about?" required />
+  
+      <label for="message">Message</label>
+      <textarea id="message" name="body" rows="5" placeholder="Write your message here..." required></textarea>
+  
+      <button type="submit">Send</button>
+    </form>
+  </main>
 </body>
 </html>
