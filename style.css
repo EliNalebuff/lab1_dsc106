@@ -292,25 +292,44 @@ html {
   .hero-img:hover {
     transform: scale(1.03);
   }
-  nav {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-    background-color: #f5f5f5; /* Light background to make nav visible */
-    border-bottom: 1px solid #ddd;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-  }
-  
-  nav a.current {
-    text-decoration: underline;
-    font-weight: bold;
-    color: black;
-  }
+/* ------------------------------ */
+/* HEADER NAVIGATION             */
+/* ------------------------------ */
+
+nav {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 1rem 2rem;
+  margin: 2rem auto;
+  max-width: 1000px;
+  background-color: oklch(70% 0.2 250); /* modern soft blue */
+  border-radius: 1rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+nav a {
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: canvastext;
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+nav a:hover {
+  background-color: oklch(85% 0.1 250 / 60%);
+  font-weight: 600;
+}
+
+nav a.current {
+  font-weight: 700;
+  text-decoration: underline;
+  background-color: oklch(60% 0.2 250 / 40%);
+}
 
   .color-scheme {
     position: absolute;
