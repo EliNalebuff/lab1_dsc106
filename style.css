@@ -288,3 +288,22 @@ html {
   .hero-img:hover {
     transform: scale(1.03);
   }
+  nav {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background-color: #f5f5f5; /* Light background to make nav visible */
+    border-bottom: 1px solid #ddd;
+  }
+  
+  nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+  }
+  
+  nav a.current {
+    text-decoration: underline;
+    font-weight: bold;
+    color: black;
+  }
