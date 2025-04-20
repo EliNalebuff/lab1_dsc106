@@ -1,7 +1,11 @@
 html {
     --color-accent: oklch(65% 50% 0);
     accent-color: var(--color-accent);
+    color-scheme: light dark;
+    background-color: canvas;
+    color: canvastext;
   }
+
   
   body {
     font: 100%/1.5 system-ui;
@@ -306,4 +310,19 @@ html {
     text-decoration: underline;
     font-weight: bold;
     color: black;
+  }
+
+  .color-scheme {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 0.8rem;
+    font-family: inherit;
+    color: inherit;
+  }
+  
+  .color-scheme select {
+    font-family: inherit;
+    background-color: inherit;
+    color: inherit;
   }
