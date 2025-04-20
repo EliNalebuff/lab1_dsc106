@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     { url: "https://github.com/elinalebuff", title: "GitHub" }
   ];
 
-  // Inject nav
   const nav = document.createElement("nav");
   document.body.prepend(nav);
 
@@ -28,13 +27,11 @@ document.addEventListener("DOMContentLoaded", () => {
     a.href = url;
     a.textContent = p.title;
 
-    // Highlight current page
     a.classList.toggle(
       "current",
       a.host === location.host && a.pathname === location.pathname
     );
 
-    // External links open in new tab
     if (a.host !== location.host) {
       a.target = "_blank";
       a.rel = "noopener";
@@ -43,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nav.append(a);
   }
 
-  // Inject dark mode toggle
+  // ✅ Insert theme toggle *after* DOM is ready
   document.body.insertAdjacentHTML(
     "afterbegin",
     `
@@ -60,14 +57,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const select = document.querySelector(".color-scheme select");
 
-  // Restore saved preference
+  // Restore preference
   if ("colorScheme" in localStorage) {
     const saved = localStorage.colorScheme;
     document.documentElement.style.setProperty("color-scheme", saved);
     select.value = saved;
   }
 
-  // Save on change
+  // Listen for changes
   select.addEventListener("input", (event) => {
     const value = event.target.value;
     document.documentElement.style.setProperty("color-scheme", value);
