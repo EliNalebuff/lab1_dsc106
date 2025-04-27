@@ -8,16 +8,30 @@
 </head>
 <body>
   
-
   <main>
     <section class="hero">
       <h1>Hi, I'm Eli 👋</h1>
-      <p>Creative builder. Data enthusiast. Many Hobbies.</p>
+      <p>Creative builder. Data enthusiast. Many hobbies.</p>
       <p>I like to make things — tools, code, ideas, stickers — and share them with people. Welcome to my digital garage.</p>
       <img src="images/ucsd_photo.png" alt="Photo of Eli Nalebuff" class="hero-img" />
     </section>
+
+    <section>
+      <h2>Latest Projects</h2>
+      <div class="projects">
+        <!-- JavaScript will insert the latest 3 projects here -->
+      </div>
+    </section>
+
+    <section>
+      <h2>Profile Stats</h2>
+      <div id="profile-stats">
+        <!-- GitHub profile stats will load here -->
+      </div>
+    </section>
   </main>
 
-  <!-- Link to global.js (must be outside body if using type="module") -->
-  <script type="module" src="/lab1_dsc106/global.js"></script>
+  <script type="module" src="global.js"></script>
+  <script type="module" src="index.js" defer></script>
+</body>
 </html>
