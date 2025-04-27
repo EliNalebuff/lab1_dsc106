@@ -1,7 +1,7 @@
 [
     {
         "title": "Sports Betting Investigation",
-        "image": "../images/Screenshot 2025-04-26 at 9.26.25 PM.png",
+        "image": "/lab1_dsc106/images/Screenshot 2025-04-26 at 9.27.08 PM.png",
         "description": "I investigated whether NFL teams tend to regress toward the mean against the spread after a standout performance (35+ points or beating the spread by 7+). Using 10 years of cleaned game and betting-line data, we flagged those “high-success” games and compared each team’s next-game spread outcome. Our initial findings reveal a noticeable underperformance trend, suggesting oddsmakers and bettors may overvalue recent hot streaks."
     },
     {
