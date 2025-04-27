@@ -1,4 +1,4 @@
-import { fetchJSON, renderProjects } from './global.js';
+import { fetchJSON, renderProjects } from '/lab1_dsc106/global.js';
 
 const projects = await fetchJSON('../lib/projects.json');
 const projectsContainer = document.querySelector('.projects');
