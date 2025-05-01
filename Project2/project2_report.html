@@ -1,8 +1,16 @@
 <!DOCTYPE html>
+
 <html lang="en">
+  
   <head>
     <title>Project 2 Report</title>
     <style>
+      figure img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin-inline: auto;
+}
       :root {
         --color-neutral-95: hsl(220 10% 95%);
         --color-neutral-90: hsl(220 10% 90%);
@@ -139,6 +147,7 @@
         }
       }
     </style>
+    
   </head>
 
   <body>
@@ -148,26 +157,26 @@
         Persuasive or Deceptive Visualization?
       </h1>
 
-      <p><strong>Your Name</strong> — <em>Your UCSD Email Address</em></p>
+      <p><strong>Eli Nalebuff</strong> — <em>enalebuff@ucsd.edu</em></p>
     </header>
 
     <main>
-      <h2>Proposition: [STATE PROPOSITION]</h2>
+      <h2>Proposition: NYPD force complaints are increasing over time.</h2>
 
       <section>
         <h3>FOR the Proposition</h3>
 
         <figure>
-          <img src="vis1.png" alt="" />
-          <figcaption>BRIEF CAPTION HERE.</figcaption>
+          <img src="vis2.png" alt="" />
+          <figcaption>Confirmed misconduct complaints against the NYPD have increased significantly over each multi-year period, peaking from 2013 to 2020..</figcaption>
         </figure>
 
         <p>Design Decisions and Rationale:</p>
 
         <ul>
-          <li>RATIONALE_1</li>
-          <li>RATIONALE_2</li>
-          <li>RATIONALE_3</li>
+          <li>Aggragated Time Ranges (-1.5): Grouping complaints into broad multi-year periods (e.g., 1993–2000, 2013–2020) creates the impression of a consistent, long-term rise in confirmed misconduct. By removing the more granular year-by-year data—particularly the steep decline after 2015—the visualization hides recent decreases and emphasizes growth. This aggregation masks short-term fluctuations and subtly guides the viewer toward interpreting the trend as steadily worsening. </li>
+          <li>Bold Title Framing (-1): The phrase “continues surging” adds urgency and emotion to the title, nudging the viewer toward interpreting the trend as dangerous or uncontrolled.</li>
+          <li>Dark Red Color (1): The deep red color implies seriousness and potential harm without altering the data presentation itself.</li>
         </ul>
       </section>
 
@@ -175,23 +184,27 @@
         <h3>AGAINST the Proposition</h3>
 
         <figure>
-          <img src="IMAGE_FILENAME" alt="" />
-          <figcaption>BRIEF CAPTION HERE.</figcaption>
+          <img src="vis1.png" alt="" />
+          <figcaption>Complaints from historically marginalized communities appear to decline from 2016 to 2019, suggesting potential improvements in police-community interactions.</figcaption>
         </figure>
 
         <p>Design Decisions and Rationale:</p>
 
         <ul>
-          <li>RATIONALE_1</li>
-          <li>RATIONALE_2</li>
-          <li>RATIONALE_3</li>
+          <li>Truncated Y-Axis (-1.5): The y-axis begins at 100 instead of 0, which exaggerates recent decreases.</li>
+          <li>Narrow Time Range (-1): By focusing only on 2015–2019, this visualization excludes earlier data that would show a larger upward trend.</li>
+          <li>Emotional Framing via Labels (1): Referring to “historically marginalized communities” builds credibility and can distract from the fact that the overall sample is limited.</li>
         </ul>
       </section>
 
       <section>
         <h2>Final Reflection</h2>
 
-        <p>[WRITE FINAL REFLECTION PARAGRAPHS HERE.]</p>
+        <p>This project challenged me to explore how framing and design decisions can dramatically shape a viewer’s interpretation of the same dataset. I chose a relatively broad proposition: “NYPD force complaints are increasing over time” intentionally. It gave me enough flexibility to construct both persuasive and opposing arguments depending on how I sliced the data. In the real world, this is the kind of ambiguity that allows visualizations to be used in editorials, campaigns, and reports with completely different agendas.
+
+          Working with a dataset about police complaints, especially one involving confirmed misconduct and  marginalized communities, added another layer of responsibility. What surprised me most was how easy it was to manipulate the message by changing just a few elements: the date range, the y-axis scale, or even just the title. Nothing I did involved fake data—but some views felt more honest than others.
+          
+          From this, I’ve come to see ethical visualization as less about technical correctness and more about context and intent. If the goal is to inform and the viewer has a fair shot at interpreting the full picture, it’s persuasive. If key context is removed, or the design misleads at first glance, it’s deceptive. This assignment reminded me that data visualization is never just about the data—it’s about decision, and it's important for us to stay aware of our own biases so we can appraoch that responsibility thoughtfully and with care.</p>
       </section>
     </main>
   </body>
