@@ -4,17 +4,113 @@
   <meta charset="UTF-8" />
   <title>Projects - Eli Nalebuff</title>
   <link rel="stylesheet" href="/lab1_dsc106/style.css" />
+  <style>
+    .container {
+      display: flex;
+      align-items: center;
+      gap: 2em;
+      flex-wrap: wrap;
+      margin-block: 2em;
+    }
+
+    #projects-pie-plot {
+      max-width: 20em;
+      flex-shrink: 0;
+      overflow: visible;
+    }
+
+    .legend {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+      gap: 1em;
+      padding: 1em;
+      margin: 0;
+      border: 1px solid #ccc;
+      border-radius: 0.5em;
+      background-color: #f9f9f9;
+      list-style: none;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      font-size: 0.9em;
+    }
+
+    .legend-item .swatch {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      aspect-ratio: 1 / 1;
+      background-color: var(--color);
+      border-radius: 0.25em;
+      border: 1px solid #999;
+    }
+    .searchBar {
+      display: block;
+      margin: 1em auto 2em auto;
+      padding: 0.5em 1em;
+      width: min(30em, 90%);
+      font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 0.5em;
+    }
+    /* Make path transitions smooth */
+#projects-pie-plot path {
+  transition: opacity 300ms, transform 300ms;
+}
+#projects-pie-plot path {
+  cursor: pointer;
+  transition: opacity 300ms, transform 300ms;
+}
+
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+
+.selected {
+  --color: oklch(60% 45% 0) !important;
+}
+
+#projects-pie-plot path.selected {
+  fill: var(--color) !important;
+}
+
+.legend-item.selected {
+  font-weight: bold;
+  background-color: #eee;
+  border-radius: 0.25em;
+}
+
+/* When any wedge is hovered, fade others */
+#projects-pie-plot:has(path:hover) path:not(:hover) {
+  opacity: 0.5;
+}
+  </style>
 </head>
 <body>
 
-  <h1>Welcome to My Portfolio</h1>
+  <h1>Check Out My Projects!</h1>
 
-  <h2>Latest Projects</h2>
+  <div class="container">
+    <svg id="projects-pie-plot" viewBox="-50 -50 100 100"></svg>
+    <ul class="legend"></ul>
+  </div>
+
+  <input
+  class="searchBar"
+  type="search"
+  aria-label="Search projects"
+  placeholder="🔍 Search projects…"
+/>
+
   <div class="projects">
     <!-- Latest 3 projects will load dynamically here -->
   </div>
 
-  <!-- Correct absolute paths -->
+  <!-- Scripts -->
   <script type="module" src="/lab1_dsc106/global.js"></script>
   <script type="module" src="/lab1_dsc106/projects/projects.js"></script>
 

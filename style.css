@@ -376,3 +376,45 @@ html[data-theme="dark"] .stat-card {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3)  !important;
 }
 
+.container {
+  display: flex;
+  align-items: center;
+  gap: 2em;
+  flex-wrap: wrap;
+  margin-block: 2em;
+}
+
+#projects-pie-plot {
+  max-width: 20em;
+  flex-shrink: 0;
+}
+
+.legend {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+  gap: 1em;
+  padding: 1em;
+  margin: 0;
+  border: 1px solid #ccc;
+  border-radius: 0.5em;
+  background-color: #f9f9f9;
+  list-style: none;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  font-size: 0.9em;
+}
+
+.legend-item .swatch {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  aspect-ratio: 1 / 1;
+  background-color: var(--color);
+  border-radius: 0.25em;
+  border: 1px solid #999;
+}
