@@ -80,8 +80,8 @@ function updateTooltipVisibility(isVisible) {
 
 function updateTooltipPosition(event) {
   const tooltip = document.getElementById('commit-tooltip');
-  tooltip.style.left = `${event.clientX + 10}px`;
-  tooltip.style.top = `${event.clientY + 10}px`;
+  tooltip.style.left = `${event.clientX}px`;
+  tooltip.style.top = `${event.clientY -8}px`;
 }
 
 function renderScatterPlot(commits) {
