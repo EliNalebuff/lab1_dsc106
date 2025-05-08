@@ -11,7 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     { url: "projects/", title: "Projects" },
     { url: "resume/", title: "Resume" },
     { url: "contact/", title: "Contact" },
-    { url: "https://github.com/elinalebuff", title: "GitHub" }
+    { url: "https://github.com/elinalebuff", title: "GitHub" },
+    { url: "meta/", title: "Meta"}
   ];
 
   const nav = document.createElement("nav");

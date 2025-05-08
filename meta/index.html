@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Meta Analysis</title>
+    <link rel="stylesheet" href="../style.css" />
+    <script type="module" src="main.js"></script>
+
+    <style>
+      .stats {
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 0.25em 1em;
+        font-family: sans-serif;
+        max-width: 400px;
+        margin-bottom: 2em;
+      }
+
+      .stats dt {
+        font-weight: bold;
+        text-align: right;
+      }
+
+      .stats dd {
+        margin: 0;
+      }
+
+      .gridlines line {
+        stroke: #ccc;
+        stroke-opacity: 0.3;
+      }
+
+      .gridlines path {
+        display: none;
+      }
+
+      .tooltip {
+        position: fixed;
+        background: white;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        padding: 0.5em 0.8em;
+        font-size: 14px;
+         max-width: 280px;
+         z-index: 100;
+         pointer-events: auto;
+
+         display: inline-block;
+         line-height: 1.4;
+        }
+    
+    .tooltip[hidden] {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease;
+        }
+
+      .tooltip dt {
+        font-weight: bold;
+        margin: 0;
+
+      }
+
+      .tooltip dd {
+        margin: 0 0 .2em 0;
+      }
+
+      .tooltip a {
+        word-break: break-all;
+        text-decoration: underline;
+        color: #007bff;
+      }
+
+      circle {
+        transition: 200ms;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
+
+      circle:hover {
+        transform: scale(1.5);
+      }
+      circle.selected { 
+        fill: #ff6b6b
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Meta Analysis</h1>
+    <p>This page shows statistics about our codebase.</p>
+
+    <div id="stats"></div>
+
+    <h2>Commits by Time of Day</h2>
+    <div id="chart"></div>
+
+    <dl id="commit-tooltip" class="info tooltip" hidden>
+      <dt>Commit</dt>
+      <dd><a href="" id="commit-link" target="_blank"></a></dd>
+
+      <dt>Date</dt>
+      <dd id="commit-date"></dd>
+
+      <dt>Time</dt>
+      <dd id="commit-time"></dd>
+
+      <dt>Author</dt>
+      <dd id="commit-author"></dd>
+
+      <dt>Lines Edited</dt>
+      <dd id="commit-lines"></dd>
+    </dl>
+    <p id="selection-count">No commits selected</p>
+    <dl id="language-breakdown" class="stats"></dl>
+  </body>
+</html>
