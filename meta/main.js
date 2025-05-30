@@ -272,6 +272,7 @@ function renderScatterPlot(commits) {
 function updateScatterPlot(commits) {
   const svg = d3.select('#chart').select('svg');
 
+  // Preserve axis and structure, do not remove all elements
   const xScale = d3.scaleTime()
     .domain(d3.extent(commits, d => d.datetime))
     .range([50, 950])
@@ -287,35 +288,40 @@ function updateScatterPlot(commits) {
 
   const sortedCommits = d3.sort(commits, d => -d.totalLines);
 
+  // Replace x-axis update logic
   const xAxisGroup = svg.select('.x-axis');
-  xAxisGroup.selectAll('*').remove();
-  xAxisGroup.call(d3.axisBottom(xScale));
+  xAxisGroup.transition().duration(300).call(d3.axisBottom(xScale));
 
   const dots = svg.select('g.dots');
 
+  // Update circles, use .attr() before .transition() for smoothness
   const joined = dots.selectAll('circle')
     .data(sortedCommits, d => d.id)
     .join(
       enter => enter.append('circle')
-        .attr('r', 0)
         .attr('cx', d => xScale(d.datetime))
         .attr('cy', d => yScale(d.hourFrac))
+        .attr('r', 0)
         .attr('fill', 'steelblue')
         .style('opacity', 0)
+        .style('display', 'inline')
         .call(enter => enter.transition()
-          .duration(400)
+          .duration(300)
           .attr('r', d => rScale(d.totalLines))
           .style('opacity', 0.7)),
       update => update
-        .transition()
-        .duration(400)
         .attr('cx', d => xScale(d.datetime))
         .attr('cy', d => yScale(d.hourFrac))
-        .attr('r', d => rScale(d.totalLines)),
-      exit => exit.transition().duration(300).style('opacity', 0).remove()
+        .attr('r', d => rScale(d.totalLines))
+        .style('opacity', 0.7)
+        .style('display', 'inline')
+        .transition()
+        .duration(300),
+      exit => exit.transition().duration(20).style('opacity', 0).remove()
     );
 
-  joined.raise(); // Bring new/updated circles to front
+  // Update .raise() to only affect highlighted circles and avoid interfering with layout prematurely
+  joined.filter(function(d) { return d3.select(this).classed('highlight'); }).raise();
 }
 
 function isCommitSelected(selection, commit, xScale, yScale) {
