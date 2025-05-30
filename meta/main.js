@@ -277,6 +277,10 @@ function updateScatterPlot(commits) {
     .range([50, 950])
     .nice();
 
+  const yScale = d3.scaleLinear()
+    .domain([0, 24])
+    .range([600 - 30, 10]);
+
   const rScale = d3.scaleSqrt()
     .domain(d3.extent(commits, d => d.totalLines))
     .range([2, 30]);
@@ -289,10 +293,29 @@ function updateScatterPlot(commits) {
 
   const dots = svg.select('g.dots');
 
-  dots.selectAll('circle')
+  const joined = dots.selectAll('circle')
     .data(sortedCommits, d => d.id)
-    .attr('cx', d => xScale(d.datetime))
-    .attr('r', d => rScale(d.totalLines));
+    .join(
+      enter => enter.append('circle')
+        .attr('r', 0)
+        .attr('cx', d => xScale(d.datetime))
+        .attr('cy', d => yScale(d.hourFrac))
+        .attr('fill', 'steelblue')
+        .style('opacity', 0)
+        .call(enter => enter.transition()
+          .duration(400)
+          .attr('r', d => rScale(d.totalLines))
+          .style('opacity', 0.7)),
+      update => update
+        .transition()
+        .duration(400)
+        .attr('cx', d => xScale(d.datetime))
+        .attr('cy', d => yScale(d.hourFrac))
+        .attr('r', d => rScale(d.totalLines)),
+      exit => exit.transition().duration(300).style('opacity', 0).remove()
+    );
+
+  joined.raise(); // Bring new/updated circles to front
 }
 
 function isCommitSelected(selection, commit, xScale, yScale) {
@@ -399,20 +422,26 @@ import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.1.1/+esm';
 
 const scroller = scrollama();
 
+let debounceTimeout;
+function onStepEnter(response) {
+  clearTimeout(debounceTimeout);
+  debounceTimeout = setTimeout(() => {
+    const stepCommit = commits[response.index];
+    d3.selectAll('circle')
+      .classed('highlight', d => d.id === stepCommit.id)
+      .raise();
+    const filteredCommits = commits.filter(d => d.datetime <= stepCommit.datetime);
+    updateFileDisplay(filteredCommits);
+  }, 20);
+}
+
 scroller
   .setup({
     step: '.step',
     offset: 0.5,
     debug: false,
   })
-  .onStepEnter(({ index }) => {
-    const stepCommit = commits[index];
-    d3.selectAll('circle')
-      .classed('highlight', d => d.id === stepCommit.id)
-      .raise();
-    const filteredCommits = commits.filter(d => d.datetime <= stepCommit.datetime);
-    updateFileDisplay(filteredCommits);
-  })
+  .onStepEnter(onStepEnter)
   .onStepExit(() => {
     d3.selectAll('circle').classed('highlight', false);
   });
