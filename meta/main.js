@@ -11,7 +11,98 @@ async function loadData() {
   }));
   return data;
 }
+function onTimeSliderChange() {
+  const slider = document.getElementById('commit-progress');
+  commitProgress = +slider.value;
+  commitMaxTime = timeScale.invert(commitProgress);
 
+  // Update the time element
+  const timeEl = document.getElementById('commit-time');
+  timeEl.textContent = commitMaxTime.toLocaleString('en', {
+    dateStyle: 'long',
+    timeStyle: 'short'
+  });
+
+  // Prepare filtered commits
+  const filteredCommits = commits.filter(d => d.datetime <= commitMaxTime);
+
+  // Re-render scatter plot (we’ll refine this in the next step)
+  updateScatterPlot(filteredCommits);
+
+  // Update file display
+  updateFileDisplay(filteredCommits);
+}
+
+function updateFileDisplay(filteredCommits) {
+  const colors = d3.scaleOrdinal(d3.schemeTableau10);
+
+  let lines = filteredCommits.flatMap(d => d.lines);
+  let files = d3.groups(lines, d => d.file)
+    .map(([name, lines]) => ({ name, lines }))
+    .sort((a, b) => b.lines.length - a.lines.length);
+
+  // Ensure #files container stretches and aligns items to top
+  d3.select('#files')
+    .style('display', 'flex')
+    .style('flex-direction', 'column')
+    .style('align-items', 'flex-start')
+    .style('justify-content', 'flex-start')
+    .style('row-gap', '10px')
+    .style('min-height', '100%');
+
+  const filesContainer = d3.select('#files')
+    .selectAll('div')
+    .data(files, d => d.name)
+    .join(
+      // Enhanced enter: animate in with fade and upward shift
+      enter => enter.append('div')
+        .style('opacity', 0)
+        .style('transform', 'translateY(12px)')
+        .style('margin-bottom', '12px')
+        .call(div => {
+          div.append('dt').append('code');
+          div.append('dd').attr('class', 'line-count');
+          div.append('dd').attr('class', 'lines');
+        })
+        .transition()
+        .duration(500)
+        .ease(d3.easeCubicOut)
+        .style('opacity', 1)
+        .style('transform', 'translateY(0px)'),
+      update => update,
+      exit => exit.remove()
+    );
+
+  filesContainer.style('--color', d => colors(d.lines[0]?.type));
+
+  filesContainer.select('dt > code')
+    .transition()
+    .duration(400)
+    .text(d => d.name);
+
+  filesContainer.select('dd.line-count')
+    .transition()
+    .duration(400)
+    .tween('text', function(d) {
+      const i = d3.interpolateNumber(+this.textContent.split(' ')[0] || 0, d.lines.length);
+      return t => this.textContent = `${Math.round(i(t))} lines`;
+    });
+
+  filesContainer.select('dd.lines')
+    .selectAll('div')
+    .data(d => d.lines, d => d.line)
+    .join(
+      enter => enter.append('div')
+        .attr('class', 'loc')
+        .style('background', 'var(--color)')
+        .style('opacity', 0)
+        .transition()
+        .duration(300)
+        .style('opacity', 1),
+      update => update,
+      exit => exit.transition().duration(300).style('opacity', 0).remove()
+    );
+}
 function processCommits(data) {
   return d3
     .groups(data, (d) => d.commit)
@@ -85,6 +176,7 @@ function updateTooltipPosition(event) {
 }
 
 function renderScatterPlot(commits) {
+  d3.select('#chart').selectAll('*').remove();
   const width = 1000;
   const height = 600;
   const margin = { top: 10, right: 10, bottom: 30, left: 50 };
@@ -130,6 +222,7 @@ function renderScatterPlot(commits) {
 
   // Axes
   svg.append('g')
+    .attr('class', 'x-axis')
     .attr('transform', `translate(0, ${usableArea.bottom})`)
     .call(d3.axisBottom(xScale));
 
@@ -143,7 +236,7 @@ function renderScatterPlot(commits) {
   const dots = svg.append('g').attr('class', 'dots');
 
   dots.selectAll('circle')
-    .data(sortedCommits)
+    .data(sortedCommits, d => d.id)
     .join('circle')
     .attr('cx', d => xScale(d.datetime))
     .attr('cy', d => yScale(d.hourFrac))
@@ -174,6 +267,32 @@ function renderScatterPlot(commits) {
 
   svg.call(brush);
   svg.selectAll('.dots, .overlay ~ *').raise();
+}
+
+function updateScatterPlot(commits) {
+  const svg = d3.select('#chart').select('svg');
+
+  const xScale = d3.scaleTime()
+    .domain(d3.extent(commits, d => d.datetime))
+    .range([50, 950])
+    .nice();
+
+  const rScale = d3.scaleSqrt()
+    .domain(d3.extent(commits, d => d.totalLines))
+    .range([2, 30]);
+
+  const sortedCommits = d3.sort(commits, d => -d.totalLines);
+
+  const xAxisGroup = svg.select('.x-axis');
+  xAxisGroup.selectAll('*').remove();
+  xAxisGroup.call(d3.axisBottom(xScale));
+
+  const dots = svg.select('g.dots');
+
+  dots.selectAll('circle')
+    .data(sortedCommits, d => d.id)
+    .attr('cx', d => xScale(d.datetime))
+    .attr('r', d => rScale(d.totalLines));
 }
 
 function isCommitSelected(selection, commit, xScale, yScale) {
@@ -235,9 +354,77 @@ function brushed(event, commits, xScale, yScale) {
 let data = await loadData();
 let commits = processCommits(data);
 
+let commitProgress = 100;
+
+const timeScale = d3
+  .scaleTime()
+  .domain(d3.extent(commits, d => d.datetime))
+  .range([0, 100]);
+
+let commitMaxTime = timeScale.invert(commitProgress);
+
 renderCommitInfo(data, commits);
 renderScatterPlot(commits);
 
 document.getElementById('commit-tooltip').addEventListener('mouseleave', () => {
   updateTooltipVisibility(false);
 });
+
+// Time slider event logic (moved here to avoid recursion)
+document.getElementById('commit-progress').addEventListener('input', onTimeSliderChange);
+onTimeSliderChange(); // run once on load
+
+// Generate narrative paragraph for each commit in #scatter-story
+d3.select('#scatter-story')
+  .selectAll('.step')
+  .data(commits)
+  .join('div')
+  .attr('class', 'step')
+  .html(
+    (d, i) => `
+      <p>On ${d.datetime.toLocaleString('en', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      })}, I made 
+      <a href="${d.url}" target="_blank">
+        ${i > 0 ? 'another glorious commit' : 'my first commit, and it was glorious'}
+      </a>. I edited ${d.totalLines} lines across ${
+        d3.rollups(d.lines, v => v.length, d => d.file).length
+      } files. Then I looked over all I had made, and I saw that it was very good.</p>
+    `
+  );
+
+// --- Scrollama interaction for highlighting dots on narrative scroll ---
+import scrollama from 'https://cdn.jsdelivr.net/npm/scrollama@3.1.1/+esm';
+
+const scroller = scrollama();
+
+scroller
+  .setup({
+    step: '.step',
+    offset: 0.5,
+    debug: false,
+  })
+  .onStepEnter(({ index }) => {
+    const stepCommit = commits[index];
+    d3.selectAll('circle')
+      .classed('highlight', d => d.id === stepCommit.id)
+      .raise();
+    const filteredCommits = commits.filter(d => d.datetime <= stepCommit.datetime);
+    updateFileDisplay(filteredCommits);
+  })
+  .onStepExit(() => {
+    d3.selectAll('circle').classed('highlight', false);
+  });
+
+// --- Scroll sync behavior for left and right columns ---
+const rightColumn = document.getElementById('right-column');
+const leftColumn = document.getElementById('left-column');
+
+if (rightColumn && leftColumn) {
+  rightColumn.addEventListener('scroll', () => {
+    const rightScrollRatio = rightColumn.scrollTop / (rightColumn.scrollHeight - rightColumn.clientHeight);
+    const leftScrollHeight = leftColumn.scrollHeight - leftColumn.clientHeight;
+    leftColumn.scrollTop = rightScrollRatio * leftScrollHeight;
+  });
+}

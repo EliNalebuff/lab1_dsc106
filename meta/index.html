@@ -7,6 +7,15 @@
     <script type="module" src="main.js"></script>
 
     <style>
+      #left-column, #right-column {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* IE and Edge */
+      }
+
+      #left-column::-webkit-scrollbar,
+      #right-column::-webkit-scrollbar {
+        display: none; /* Chrome, Safari, Opera */
+      }
       .stats {
         display: grid;
         grid-template-columns: auto auto;
@@ -16,6 +25,35 @@
         margin-bottom: 2em;
       }
 
+      circle {
+        transition: 200ms;
+        transform-origin: center;
+        transform-box: fill-box;
+        fill: steelblue;
+        opacity: 0.7;
+      }
+
+      circle.highlight {
+        stroke: #000;
+        stroke-width: 2px;
+        fill: orange;
+        opacity: 1;
+      }
+
+      .step {
+        margin: 4em 0;
+        font-size: 1rem;
+        line-height: 1.6;
+      }
+
+
+      .line-count {
+        font-size: 0.75em;
+        color: #666;
+        opacity: 0.8;
+        margin: 0.2em 0;
+      }
+
       .stats dt {
         font-weight: bold;
         text-align: right;
@@ -23,6 +61,38 @@
 
       .stats dd {
         margin: 0;
+      }
+
+      .loc {
+        display: flex;
+        width: 0.5em;
+        aspect-ratio: 1;
+        background: steelblue;
+        border-radius: 50%;
+      }
+
+      #files {
+        display: flex;
+        flex-direction: column;
+        gap: 2em;
+      }
+
+      #files dt {
+        font-weight: bold;
+        margin-bottom: 0.25em;
+      }
+
+      #files dd.line-count {
+        font-size: 0.75em;
+        color: #666;
+        opacity: 0.8;
+        margin-bottom: 0.5em;
+      }
+
+      #files dd.lines {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25em;
       }
 
       .gridlines line {
@@ -72,11 +142,6 @@
         color: #007bff;
       }
 
-      circle {
-        transition: 200ms;
-        transform-origin: center;
-        transform-box: fill-box;
-      }
 
       circle:hover {
         transform: scale(1.5);
@@ -84,19 +149,55 @@
       circle.selected { 
         fill: #ff6b6b
       }
+
+      #scrolly-1 {
+        position: relative;
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+        min-height: 200vh;
+      }
+
+      #scatter-story {
+        position: relative;
+        flex: 1;
+        font-size: 0.85em;
+        max-width: 26em;
+      }
+
+      #scatter-plot {
+        position: sticky;
+        top: 10vh;
+        height: 80vh;
+        flex: 1;
+      }
     </style>
   </head>
 
   <body>
-    
-
     <h1>Meta Analysis</h1>
+
+    <div style="display: flex; align-items: baseline; margin-bottom: 1em; gap: 1em; position: relative; z-index: 2;">
+      <label for="commit-progress">Show commits until:</label>
+      <input type="range" id="commit-progress" min="0" max="100" value="100" style="width: 300px;" />
+      <time id="commit-time" style="margin-left: auto;"></time>
+    </div>
+
     <p>This page shows statistics about our codebase.</p>
 
-    <div id="stats"></div>
+    <div id="layout-container" style="display: flex; height: 100vh; overflow: hidden;">
+      <div id="left-column" style="width: 50vw; display: flex; flex-direction: column;">
+        <div id="chart" style="height: 50vh; position: sticky; top: 0;"></div>
+        <div id="files" class="stats" style="padding: 1em; align-self: flex-start;"></div>
+      </div>
 
-    <h2>Commits by Time of Day</h2>
-    <div id="chart"></div>
+      <div id="right-column" style="width: 50vw; overflow-y: scroll; padding: 2em;">
+        <div id="stats" class="stats" style="margin-bottom: 2em;"></div>
+        <div id="scatter-story"></div>
+        <p id="selection-count">No commits selected</p>
+        <dl id="language-breakdown" class="stats"></dl>
+      </div>
+    </div>
 
     <dl id="commit-tooltip" class="info tooltip" hidden>
       <dt>Commit</dt>
@@ -114,7 +215,5 @@
       <dt>Lines Edited</dt>
       <dd id="commit-lines"></dd>
     </dl>
-    <p id="selection-count">No commits selected</p>
-    <dl id="language-breakdown" class="stats"></dl>
   </body>
 </html>
